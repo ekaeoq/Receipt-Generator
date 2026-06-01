@@ -81,6 +81,7 @@ document.querySelector("#generateId").addEventListener("click", () => {
 document.querySelector("#resetDemo").addEventListener("click", () => {
   bindings.clientName.value = "Client Name";
   bindings.subject.value = "Watch purchase receipt";
+  bindings.purchaseRecordTitle.value = "Viktor Watch";
   bindings.prefix.value = "001";
   bindings.taxRate.value = "0";
   bindings.shipping.value = "0";
@@ -286,7 +287,7 @@ function renderTotals() {
 }
 
 function renderFeature() {
-  document.querySelector("#featureTitle").textContent = "Viktor Watch";
+  document.querySelector("#featureTitle").textContent = valueOf("purchaseRecordTitle") || "Viktor Watch";
   document.querySelector("#featureDetails").textContent = "";
 }
 
