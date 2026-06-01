@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Watch Invoice Generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Serif:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <aside class="panel editor-panel" aria-label="Invoice editor">
+        <div class="panel-header">
+          <div>
+            <p class="eyebrow">Receipt Generator</p>
+            <h1>Build a polished watch invoice.</h1>
+          </div>
+          <button class="icon-button" type="button" id="resetDemo" title="Restore tasteful defaults" aria-label="Restore defaults">↺</button>
+        </div>
+
+        <div class="actions-row">
+          <button class="primary-button" type="button" id="downloadJpeg">Download JPEG</button>
+          <button class="secondary-button" type="button" id="downloadPdf">Export PDF</button>
+        </div>
+
+        <section class="form-section">
+          <h2>Identity</h2>
+          <label>
+            Watch image
+            <input type="file" id="watchUpload" accept="image/*">
+          </label>
+          <div class="grid two">
+            <label>
+              Email
+              <input data-bind="sellerEmail" value="hello@example.com">
+            </label>
+            <label>
+              Phone
+              <input data-bind="sellerPhone" value="+385 00 000 000">
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Invoice</h2>
+          <div class="grid three">
+            <label>
+              Sequence
+              <input data-bind="sequence" inputmode="numeric" value="000001">
+            </label>
+            <label>
+              Prefix
+              <input data-bind="prefix" value="001">
+            </label>
+            <button class="secondary-button align-end" type="button" id="generateId">Generate ID</button>
+          </div>
+          <div class="grid two">
+            <label>
+              Invoice date
+              <input data-bind="invoiceDate" type="date">
+            </label>
+            <label>
+              Due date
+              <input data-bind="dueDate" type="date">
+            </label>
+          </div>
+          <label>
+            Subject line
+            <input data-bind="subject" value="Watch purchase receipt">
+          </label>
+          <div class="grid two">
+            <label>
+              Currency
+              <input data-bind="currency" value="EUR">
+            </label>
+            <label>
+              Tax %
+              <input data-bind="taxRate" type="number" step="0.01" value="0">
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Buyer</h2>
+          <label>
+            Client name
+            <input data-bind="clientName" value="Client Name">
+          </label>
+          <div class="grid two">
+            <label>
+              Client email
+              <input data-bind="clientEmail" value="client@example.com">
+            </label>
+            <label>
+              Client phone
+              <input data-bind="clientPhone" value="+385 00 000 001">
+            </label>
+          </div>
+          <label>
+            Client address
+            <textarea data-bind="clientAddress">Client street 12, City, Country</textarea>
+          </label>
+        </section>
+
+        <section class="form-section">
+          <div class="section-title-row">
+            <h2>Items</h2>
+            <button class="text-button" type="button" id="addItem">+ Add item</button>
+          </div>
+          <div id="itemsEditor" class="items-editor"></div>
+          <div class="grid two">
+            <label>
+              Shipping
+              <input data-bind="shipping" type="number" step="0.01" value="0">
+            </label>
+            <label>
+              Discount
+              <input data-bind="discount" type="number" step="0.01" value="0">
+            </label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h2>Payment & terms</h2>
+          <label>
+            Payment method
+            <input data-bind="paymentMethod" value="Bank transfer">
+          </label>
+          <label>
+            Bank details
+            <textarea data-bind="bankDetails">IBAN: HR00 0000 0000 0000 0000 0
+Account name: Vintage Watches</textarea>
+          </label>
+          <label>
+            Terms
+            <textarea data-bind="terms">Payment confirms the purchase of the listed timepiece. The watch is sold as described, with authenticity documents and accessories noted above. Please keep this receipt for warranty and ownership records.</textarea>
+          </label>
+          <label>
+            Notes
+            <textarea data-bind="notes">Thank you for your purchase.</textarea>
+          </label>
+        </section>
+      </aside>
+
+      <section class="preview-zone" aria-label="Invoice preview">
+        <div class="preview-toolbar">
+          <span id="exportStatus">Ready</span>
+          <span>A4 preview</span>
+        </div>
+        <article class="invoice-sheet" id="invoice">
+          <header class="invoice-top">
+            <div class="brand-block">
+              <div class="logo-slot" id="logoPreview"><img alt="Victor Watch logo" src="assets/victor-watch-logo.png"></div>
+              <div>
+                <h2 data-preview="businessName"></h2>
+                <p data-preview="businessTagline"></p>
+              </div>
+            </div>
+            <div class="invoice-title">
+              <span>Invoice</span>
+              <strong id="invoiceIdPreview"></strong>
+            </div>
+          </header>
+
+          <section class="meta-grid">
+            <div>
+              <p class="label">Date</p>
+              <p data-preview="invoiceDate" data-format="date"></p>
+            </div>
+            <div>
+              <p class="label">Due</p>
+              <p data-preview="dueDate" data-format="date"></p>
+            </div>
+            <div>
+              <p class="label">Subject</p>
+              <p data-preview="subject"></p>
+            </div>
+          </section>
+
+          <section class="people-grid">
+            <div>
+              <p class="label">From</p>
+              <h3 data-preview="businessName"></h3>
+              <p data-preview="sellerEmail"></p>
+              <p data-preview="sellerPhone"></p>
+              <p data-preview="sellerAddress"></p>
+            </div>
+            <div>
+              <p class="label">Bill to</p>
+              <h3 data-preview="clientName"></h3>
+              <p data-preview="clientEmail"></p>
+              <p data-preview="clientPhone"></p>
+              <p data-preview="clientAddress"></p>
+            </div>
+          </section>
+
+          <section class="watch-feature">
+            <div class="watch-image" id="watchPreview">
+              <span>Watch image</span>
+            </div>
+            <div>
+              <p class="label">Purchase record</p>
+              <h3 id="featureTitle"></h3>
+              <p id="featureDetails"></p>
+            </div>
+          </section>
+
+          <section class="line-items">
+            <div class="table-head">
+              <span>Description</span>
+              <span>Qty</span>
+              <span>Price</span>
+              <span>Total</span>
+            </div>
+            <div id="itemsPreview"></div>
+          </section>
+
+          <section class="totals-block">
+            <div>
+              <p class="label">Payment</p>
+              <h3 data-preview="paymentMethod"></h3>
+              <p data-preview="bankDetails"></p>
+            </div>
+            <div class="totals-list">
+              <div><span>Subtotal</span><strong id="subtotalPreview"></strong></div>
+              <div><span>Tax</span><strong id="taxPreview"></strong></div>
+              <div><span>Shipping</span><strong id="shippingPreview"></strong></div>
+              <div><span>Discount</span><strong id="discountPreview"></strong></div>
+              <div class="grand-total"><span>Total</span><strong id="totalPreview"></strong></div>
+            </div>
+          </section>
+
+          <footer class="invoice-footer">
+            <div>
+              <p class="label">Terms</p>
+              <p data-preview="terms"></p>
+            </div>
+            <div>
+              <p class="label">Notes</p>
+              <p data-preview="notes"></p>
+            </div>
+          </footer>
+        </article>
+      </section>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
