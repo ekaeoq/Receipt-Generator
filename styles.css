@@ -253,8 +253,8 @@ textarea {
   place-items: center;
   width: 78px;
   height: 78px;
-  border: 1px solid var(--ink);
-  background: #fff;
+  border: 0;
+  background: transparent;
   overflow: hidden;
   font-weight: 900;
 }
@@ -400,6 +400,11 @@ textarea {
   line-height: 1.45;
 }
 
+[data-preview]:empty,
+.preview-item small:empty {
+  display: none;
+}
+
 .table-head span:nth-child(n+2),
 .preview-item > span {
   text-align: right;
@@ -485,8 +490,17 @@ textarea {
 }
 
 @media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+
+  html,
   body {
+    width: 210mm;
+    height: 297mm;
     background: #fff;
+    overflow: hidden;
   }
 
   .editor-panel,
@@ -502,14 +516,74 @@ textarea {
 
   .preview-zone {
     display: block;
-    overflow: visible;
+    overflow: hidden;
   }
 
   .invoice-sheet {
     width: 210mm;
-    min-height: 297mm;
-    padding: 16mm;
+    height: 297mm;
+    min-height: 0;
+    padding: 13mm 14mm;
     border: 0;
     box-shadow: none;
+    overflow: hidden;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  .invoice-top {
+    padding-bottom: 20px;
+  }
+
+  .brand-block h2,
+  .invoice-title span {
+    font-size: 34px;
+  }
+
+  .logo-slot {
+    width: 58px;
+    height: 58px;
+  }
+
+  .meta-grid,
+  .people-grid,
+  .totals-block,
+  .invoice-footer,
+  .watch-feature {
+    padding: 17px 0;
+    gap: 18px;
+  }
+
+  .watch-feature {
+    grid-template-columns: 126px 1fr;
+  }
+
+  .watch-image {
+    width: 126px;
+  }
+
+  .line-items {
+    padding: 16px 0;
+  }
+
+  .preview-item {
+    padding: 10px 0;
+  }
+
+  .totals-list {
+    gap: 5px;
+  }
+
+  .totals-list div {
+    padding-bottom: 5px;
+  }
+
+  .totals-list .grand-total {
+    font-size: 20px;
+  }
+
+  .invoice-footer {
+    font-size: 10px;
+    line-height: 1.32;
   }
 }
